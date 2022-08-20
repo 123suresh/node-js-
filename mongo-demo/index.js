@@ -16,7 +16,9 @@ const courseSchema = new mongoose.Schema({
     category:{
         type: String,
         required:true,
-        enum:['web','mobile','network']
+        enum:['web','mobile','network'],
+        lowercase: true,
+        trim: true //remove paddings
     },
     auther: String,
     //custom validator
@@ -50,7 +52,9 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         required: function(){ return this.isPublished},
         min: 10,
-        max: 200
+        max: 200,
+        get: v => Math.round(v),
+        set: v => Math.round(v)
     }
 });
 
@@ -61,9 +65,9 @@ const Course = mongoose.model('Course', courseSchema);
 async function createCourse() {
     const course = new Course({
         name: 'Marketing Course 2',
-        category:'-',
+        category:'Web',
         auther: 'suresh',
-        // tags: ['angular', 'frontend'],
+        tags: ['angular', 'frontend'],
         isPublished: false,
         price:15
     });
